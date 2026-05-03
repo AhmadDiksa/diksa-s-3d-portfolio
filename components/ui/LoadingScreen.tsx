@@ -36,10 +36,24 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[200] bg-background flex flex-col items-center justify-center"
-      exit={{ opacity: 0, y: -50 }}
-      transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+      className="fixed inset-0 z-[200] bg-background flex flex-col items-center justify-center overflow-hidden"
+      exit={{ 
+        y: '-100%',
+        opacity: 0.8
+      }}
+      transition={{ 
+        duration: 1.2, 
+        ease: [0.7, 0, 0.3, 1], // Custom cinematic ease
+      }}
     >
+      {/* Background shards/elements for depth during transition */}
+      <motion.div 
+        className="absolute inset-0 z-0 opacity-10"
+        exit={{ scale: 1.2, opacity: 0 }}
+        transition={{ duration: 1.5 }}
+      >
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[size:40px_40px]" />
+      </motion.div>
       <div className="relative w-64 h-2 bg-white/10 rounded-full overflow-hidden mb-6">
         <motion.div
           className="absolute top-0 left-0 h-full bg-brand-500 rounded-full"

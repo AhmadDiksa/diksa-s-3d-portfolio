@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { AnimatePresence } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import dynamic from 'next/dynamic';
 import { LoadingScreen } from '@/components/ui/LoadingScreen';
 import { Navbar } from '@/components/layout/Navbar';
@@ -40,8 +40,17 @@ export default function Home() {
 
       <CustomCursor />
       
-      {/* Content wrapper hidden until loading completes */}
-      <div className={`transition-opacity duration-1000 ${isLoading ? 'opacity-0 h-screen overflow-hidden' : 'opacity-100'} relative z-10`}>
+      {/* Content wrapper with entrance animation */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 1.1 }}
+        animate={!isLoading ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.1 }}
+        transition={{ 
+          duration: 1.5, 
+          ease: [0.16, 1, 0.3, 1], // Deceleration ease
+          delay: 0.2 // Small delay to sync with loading screen exit
+        }}
+        className="relative z-10 flex flex-col"
+      >
         <Navbar />
         <Hero />
         <About />
@@ -50,7 +59,7 @@ export default function Home() {
         <Experience />
         <Contact />
         <Footer />
-      </div>
+      </motion.div>
     </main>
   );
 }

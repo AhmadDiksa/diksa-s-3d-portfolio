@@ -17,7 +17,7 @@ const BackgroundScene = dynamic(() => import('@/components/3d/BackgroundScene'),
 const CustomCursor = dynamic(() => import('@/components/ui/CustomCursor').then(mod => mod.CustomCursor), { ssr: false });
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   return (
     <main className="min-h-screen bg-background text-foreground selection:bg-brand-500/30 font-sans flex flex-col overflow-x-hidden relative">

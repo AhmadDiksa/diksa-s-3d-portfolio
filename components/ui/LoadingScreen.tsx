@@ -1,25 +1,29 @@
 'use client';
 
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
+import { useProgress } from '@react-three/drei';
 
 export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
+  const { progress: loadProgress, active } = useProgress();
   const [progress, setProgress] = useState(0);
 
+  // Smooth out the progress display
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setTimeout(() => onComplete(), 400); // Wait a beat before dismissing
-          return 100;
-        }
-        return prev + Math.floor(Math.random() * 10) + 1;
-      });
-    }, 100);
+    setProgress((prev) => {
+      if (loadProgress > prev) return loadProgress;
+      return prev;
+    });
+  }, [loadProgress]);
 
-    return () => clearInterval(interval);
-  }, [onComplete]);
+  useEffect(() => {
+    if (!active && progress >= 100) {
+      const timer = setTimeout(() => {
+        onComplete();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [active, progress, onComplete]);
 
   return (
     <motion.div

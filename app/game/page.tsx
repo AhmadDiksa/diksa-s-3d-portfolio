@@ -211,48 +211,44 @@ export default function GamePage() {
       </div>
       <div className="relative border border-white/10 w-full max-w-[900px] aspect-[900/650]" style={{ boxShadow: '0 0 60px rgba(255,255,255,0.05)' }}>
         <canvas ref={canvasRef} width={GW} height={GH} className="w-full h-full block" />
-        
-        {/* Mobile Controls Overlay */}
-        <div className="absolute inset-0 pointer-events-none md:hidden flex flex-col justify-end p-6 gap-6">
-          <div className="flex justify-between items-end w-full pointer-events-auto">
-            <div className="flex gap-4">
-              <button 
-                onPointerDown={() => { s.current.keys['ArrowLeft'] = true; }}
-                onPointerUp={() => { s.current.keys['ArrowLeft'] = false; }}
-                onPointerLeave={() => { s.current.keys['ArrowLeft'] = false; }}
-                className="w-20 h-20 bg-white/10 border border-white/20 rounded-2xl flex items-center justify-center active:bg-white/30 backdrop-blur-md select-none"
-              >
-                <span className="text-3xl text-white">←</span>
-              </button>
-              <button 
-                onPointerDown={() => { s.current.keys['ArrowRight'] = true; }}
-                onPointerUp={() => { s.current.keys['ArrowRight'] = false; }}
-                onPointerLeave={() => { s.current.keys['ArrowRight'] = false; }}
-                className="w-20 h-20 bg-white/10 border border-white/20 rounded-2xl flex items-center justify-center active:bg-white/30 backdrop-blur-md select-none"
-              >
-                <span className="text-3xl text-white">→</span>
-              </button>
-            </div>
-            
-            <button 
-              onPointerDown={() => { 
-                if (gameState !== 'playing') startGame();
-                else s.current.keys['Space'] = true; 
-              }}
-              onPointerUp={() => { s.current.keys['Space'] = false; }}
-              onPointerLeave={() => { s.current.keys['Space'] = false; }}
-              className="w-24 h-24 bg-brand-500/20 border-2 border-brand-500/50 rounded-full flex items-center justify-center active:scale-90 transition-transform backdrop-blur-md select-none"
-            >
-              <div className="w-16 h-16 bg-brand-500 rounded-full shadow-[0_0_20px_rgba(6,182,212,0.5)] flex items-center justify-center">
-                <span className="text-[10px] font-black uppercase tracking-widest text-white">Shoot</span>
-              </div>
-            </button>
-          </div>
-        </div>
       </div>
-      <div className="w-full max-w-[900px] flex flex-col md:flex-row justify-between items-center mt-6 gap-6">
+
+      {/* Mobile Controls Bar (Below Canvas) */}
+      <div className="w-full max-w-[900px] md:hidden grid grid-cols-2 gap-4 mt-8 px-2">
+        <div className="flex gap-3">
+          <button 
+            onPointerDown={() => { s.current.keys['ArrowLeft'] = true; }}
+            onPointerUp={() => { s.current.keys['ArrowLeft'] = false; }}
+            onPointerLeave={() => { s.current.keys['ArrowLeft'] = false; }}
+            className="flex-1 h-20 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center active:bg-white/20 transition-colors select-none touch-none"
+          >
+            <span className="text-3xl text-white/50">←</span>
+          </button>
+          <button 
+            onPointerDown={() => { s.current.keys['ArrowRight'] = true; }}
+            onPointerUp={() => { s.current.keys['ArrowRight'] = false; }}
+            onPointerLeave={() => { s.current.keys['ArrowRight'] = false; }}
+            className="flex-1 h-20 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center active:bg-white/20 transition-colors select-none touch-none"
+          >
+            <span className="text-3xl text-white/50">→</span>
+          </button>
+        </div>
+        
+        <button 
+          onPointerDown={() => { 
+            if (gameState !== 'playing') startGame();
+            else s.current.keys['Space'] = true; 
+          }}
+          onPointerUp={() => { s.current.keys['Space'] = false; }}
+          onPointerLeave={() => { s.current.keys['Space'] = false; }}
+          className="h-20 bg-brand-500/10 border border-brand-500/30 rounded-2xl flex items-center justify-center active:scale-95 transition-all select-none touch-none"
+        >
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-brand-400">Shoot</span>
+        </button>
+      </div>
+
+      <div className="w-full max-w-[900px] flex flex-col md:flex-row justify-between items-center mt-8 gap-6">
         <p className="hidden md:block text-[11px] font-mono text-white/20">← → MOVE  |  SPACE SHOOT</p>
-        <p className="md:hidden text-[10px] font-mono text-white/20 text-center uppercase tracking-widest">Use On-Screen Controls To Play</p>
         
         <button onClick={startGame} className="w-full md:w-auto px-10 py-4 text-[11px] uppercase tracking-widest font-bold border border-white/20 text-white hover:bg-white hover:text-black transition-all duration-200 bg-white/5">
           {gameState === 'idle' ? 'Start Game' : 'Play Again'}

@@ -335,19 +335,36 @@ export default function PongPage() {
       </div>
 
       {/* Canvas */}
-      <div className="relative border border-white/10" style={{ boxShadow: '0 0 80px rgba(255,255,255,0.03), 0 0 40px rgba(248,113,113,0.04)' }}>
-        <canvas ref={canvasRef} width={W} height={H} className="block" />
+      <div 
+        className="relative border border-white/10 w-full max-w-[900px] aspect-[900/600] touch-none" 
+        style={{ boxShadow: '0 0 80px rgba(255,255,255,0.03), 0 0 40px rgba(248,113,113,0.04)' }}
+        onPointerMove={(e) => {
+          if (stateRef.current.state === 'playing') {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const scaleY = H / rect.height;
+            const touchY = (e.clientY - rect.top) * scaleY;
+            stateRef.current.playerY = Math.max(0, Math.min(H - PADDLE_H, touchY - PADDLE_H / 2));
+          }
+        }}
+        onPointerDown={(e) => {
+          if (stateRef.current.state !== 'playing') startGame();
+        }}
+      >
+        <canvas ref={canvasRef} width={W} height={H} className="w-full h-full block" />
       </div>
 
       {/* Controls */}
-      <div className="w-full max-w-[900px] flex justify-between items-center mt-4">
-        <p className="text-[11px] font-mono text-white/20">W/S or ↑↓ to move  |  SPACE pause</p>
+      <div className="w-full max-w-[900px] flex flex-col md:flex-row justify-between items-center mt-6 gap-6">
+        <p className="hidden md:block text-[11px] font-mono text-white/20">W/S or ↑↓ to move  |  SPACE pause</p>
+        <p className="md:hidden text-[10px] font-mono text-white/20 text-center uppercase tracking-widest">Touch & Drag to move paddle</p>
+        
         <button
           onClick={startGame}
-          className="px-6 py-2 text-[11px] uppercase tracking-widest font-bold border border-white/20 text-white/60 hover:bg-white hover:text-black transition-all duration-200"
+          className="w-full md:w-auto px-10 py-4 text-[11px] uppercase tracking-widest font-bold border border-white/20 text-white hover:bg-white hover:text-black transition-all duration-200 bg-white/5"
         >
           {gameState === 'idle' ? 'Start Game' : 'Play Again'}
         </button>
+        
         <Link href="/game" className="text-[11px] uppercase tracking-widest text-white/30 hover:text-white transition-colors">
           Space Shooter →
         </Link>

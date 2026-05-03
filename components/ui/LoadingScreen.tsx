@@ -7,23 +7,32 @@ import { useProgress } from '@react-three/drei';
 export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const { progress: loadProgress, active } = useProgress();
   const [progress, setProgress] = useState(0);
+  const [isDone, setIsDone] = useState(false);
 
   // Smooth out the progress display
   useEffect(() => {
-    setProgress((prev) => {
-      if (loadProgress > prev) return loadProgress;
-      return prev;
-    });
-  }, [loadProgress]);
+    if (loadProgress > progress) {
+      setProgress(loadProgress);
+    }
+  }, [loadProgress, progress]);
+
+  // Ensure loading screen stays for at least 1.5s for brand presence and smooth transition
+  useEffect(() => {
+    const minTime = setTimeout(() => {
+      setIsDone(true);
+    }, 1500);
+    return () => clearTimeout(minTime);
+  }, []);
 
   useEffect(() => {
-    if (!active && progress >= 100) {
+    // Only complete if minimum time has passed AND three.js is done loading
+    if (isDone && !active && progress >= 100) {
       const timer = setTimeout(() => {
         onComplete();
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [active, progress, onComplete]);
+  }, [isDone, active, progress, onComplete]);
 
   return (
     <motion.div
